@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// Пшш Пшш... Проверка... Проверка...
+
 namespace SnakeGame
 {
     public class Snake
@@ -29,6 +29,26 @@ namespace SnakeGame
 
         
         public Queue<Pixel> Body { get; } = new Queue<Pixel>(); //очерель для тела
+
+        public void Move(Direction direction) //Метод для движения змеи // Используем напрвыление как параметр движения
+        {
+            Clear();
+
+            Body.Enqueue(new Pixel(Head.X, Head.Y, bodyColor));
+
+            Body.Dequeue(); //Убираем последний пиксель из очереди
+
+            Head = direction switch //Двигаем голову в зависимости от направления движения
+            {
+                Direction.Right => new Pixel(Head.X + 1, Head.Y, bodyColor),
+                Direction.Left => new Pixel(Head.X - 1, Head.Y, bodyColor),
+                Direction.Up => new Pixel(Head.X, Head.Y - 1, bodyColor),
+                Direction.Down => new Pixel(Head.X, Head.Y + 1, bodyColor),
+                
+            };
+
+            
+        }
 
         public void Draw() //метод отрисовки
         {

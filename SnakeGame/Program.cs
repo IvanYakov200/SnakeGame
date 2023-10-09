@@ -1,14 +1,14 @@
 ﻿using System;
 using static System.Console;
-
+//14:32
 namespace SnakeGame
 {
     class Program
     {
         private const int MapWidth = 30; //Настраиваем окно приложения. Создаем пару глобальных переменных. Ширина карты
         private const int MapHeight = 20; //Высота карты
-        private const int ScreenWidth = MapWidth * 3; //Переменные, котоорые отвечают за размер экрана консоли
-        private const int ScreenHeight = MapHeight * 3; //Размер карты умноженный на 3
+        private const int ScreenWidth = MapWidth * 4; //Переменные, котоорые отвечают за размер экрана консоли
+        private const int ScreenHeight = MapHeight * 4; //Размер карты умноженный на 3
 
         private const ConsoleColor BorderColor = ConsoleColor.Gray; //глобальная переменная, которая содержит в себе цвет для бортика
 
@@ -24,6 +24,14 @@ namespace SnakeGame
             DrowBorder();
 
             var snake = new Snake(10, 5, HeadColor, BodyrColor); //Создаем экземпляр змеи в нашей программе
+
+            while (true) //Для теста метода используется бесконечный цикл
+                         // в котором змея будет двигаться вправо с перерывом 200 секунд
+            {
+                snake.Move(Direction.Right);
+
+                Thread.Sleep(200);
+            }
 
             ReadKey();
 
