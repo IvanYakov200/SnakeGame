@@ -14,10 +14,10 @@ namespace SnakeGame
             Color = color;
             PixelSize = pixelSize;
         }
-        public int X { get; }  //Эта структура будет содержать координты X и Y 
-
-        public int Y { get; } //А также цвет пикселя
-        public ConsoleColor Color { get; }
+        public int X { get; }
+                                //Эта структура будет содержать координты X и Y 
+        public int Y { get; } 
+        public ConsoleColor Color { get; } //А также цвет пикселя
 
         public int PixelSize { get; }  //Размер пикселя
 
