@@ -30,13 +30,14 @@ namespace SnakeGame
         
         public Queue<Pixel> Body { get; } = new Queue<Pixel>(); //очерель для тела
 
-        public void Move(Direction direction) //Метод для движения змеи // Используем напрвыление как параметр движения
+        public void Move(Direction direction, bool eat = false) //Метод для движения змеи // Используем напрвыление как параметр движения
         {
             Clear();
 
             Body.Enqueue(new Pixel(Head.X, Head.Y, bodyColor));
 
-            Body.Dequeue(); //Убираем последний пиксель из очереди
+            if(!eat) //если змея есть просто не убираем последний пиксель
+                Body.Dequeue(); //Убираем последний пиксель из очереди
 
             Head = direction switch //Двигаем голову в зависимости от направления движения
             {
@@ -44,10 +45,10 @@ namespace SnakeGame
                 Direction.Left => new Pixel(Head.X - 1, Head.Y, bodyColor),
                 Direction.Up => new Pixel(Head.X, Head.Y - 1, bodyColor),
                 Direction.Down => new Pixel(Head.X, Head.Y + 1, bodyColor),
-                
+                _ => Head
             };
 
-            
+            Draw();
         }
 
         public void Draw() //метод отрисовки

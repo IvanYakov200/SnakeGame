@@ -23,7 +23,7 @@ namespace SnakeGame
 
         public void Draw() //метод отрисовки пикселя 
         {
-            Console.ForegroundColor = Color; //Применяем цвет пикселя к курсору консоли 
+            ForegroundColor = Color; //Применяем цвет пикселя к курсору консоли 
             for (int x = 0; x < PixelSize; x++) //Двойной цикл для отрисовки большого пикселя 3на3
             {
                 for (int y = 0; y < PixelSize; y++)
