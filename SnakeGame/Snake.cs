@@ -1,57 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SnakeGame
+namespace Zmeika2
 {
     public class Snake
     {
-        private readonly ConsoleColor headColor;
-        private readonly ConsoleColor bodyColor;
+        private readonly ConsoleColor _headColor;
 
-        public Snake(int initialX, int initialY, ConsoleColor HeadColor, ConsoleColor BodyColor, int bodyLength = 3) //принимает начальное положение головы и тела, цвета для головы и тела, а также начальный размер тела
+        private readonly ConsoleColor _bodyColor;
+
+        public Snake(int initialX, int initialY, ConsoleColor headColor, ConsoleColor bodyColor, int bodyLength = 3)
         {
-            headColor = HeadColor;
-            bodyColor = BodyColor;
+            _headColor = headColor;
+            _bodyColor = bodyColor;
 
-            Head = new Pixel(initialX, initialY, headColor);  //Инициализируем голову
+            Head = new Pixel(initialX, initialY, headColor);
 
-            for (int i = bodyLength; i >= 0; i--) //Цикл для тела, в котором мы добавляем пиксели начиная с хвоста. Проходим от длины тела до нуля и дикрементируем i
+            for (int i = bodyLength; i >= 0; i--)
             {
-                Body.Enqueue(new Pixel(Head.X - i - 1, initialY, bodyColor)); //Вызываем метод Enqueue для того, чтобы добавить метод в очередь
+                Body.Enqueue(new Pixel(Head.X - i - 1, initialY, _bodyColor));
             }
 
             Draw();
         }
-        public Pixel Head { get; private set;  } //пиксель головы 
 
-        
-        public Queue<Pixel> Body { get; } = new Queue<Pixel>(); //очерель для тела
+        public Pixel Head { get; private set; }
 
-        public void Move(Direction direction, bool eat = false) //Метод для движения змеи // Используем напрвыление как параметр движения
+        public Queue<Pixel> Body { get; } = new Queue<Pixel>();
+
+        public void Move(Direction direction, bool eat = false)
         {
             Clear();
 
-            Body.Enqueue(new Pixel(Head.X, Head.Y, bodyColor));
+            Body.Enqueue(new Pixel(Head.X, Head.Y, _bodyColor));
+            if (!eat)
+                Body.Dequeue();
 
-            if(!eat) //если змея есть просто не убираем последний пиксель
-                Body.Dequeue(); //Убираем последний пиксель из очереди
-
-            Head = direction switch //Двигаем голову в зависимости от направления движения
+            Head = direction switch
             {
-                Direction.Right => new Pixel(Head.X + 1, Head.Y, bodyColor),
-                Direction.Left => new Pixel(Head.X - 1, Head.Y, bodyColor),
-                Direction.Up => new Pixel(Head.X, Head.Y - 1, bodyColor),
-                Direction.Down => new Pixel(Head.X, Head.Y + 1, bodyColor),
+                Direction.Right => new Pixel(Head.X + 1, Head.Y, _headColor),
+                Direction.Left => new Pixel(Head.X - 1, Head.Y, _headColor),
+                Direction.Up => new Pixel(Head.X, Head.Y - 1, _headColor),
+                Direction.Down => new Pixel(Head.X, Head.Y + 1, _headColor),
                 _ => Head
             };
 
             Draw();
         }
 
-        public void Draw() //метод отрисовки
+        public void Draw()
         {
             Head.Draw();
 
@@ -61,7 +58,7 @@ namespace SnakeGame
             }
         }
 
-        public void Clear() //метод отчистки
+        public void Clear()
         {
             Head.Clear();
 
