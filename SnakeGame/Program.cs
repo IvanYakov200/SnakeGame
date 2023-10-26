@@ -16,7 +16,8 @@ namespace SnakeConsole
         private const int ScreenWidth = MapWidth * 3;
         private const int ScreenHeight = MapHeight * 3;
 
-        private const int FrameMilliseconds = 200;
+        //private const int FrameMilliseconds = 200;
+       static int FrameMilliseconds = 250;
 
         private const ConsoleColor BorderColor = ConsoleColor.Gray;
 
@@ -27,12 +28,12 @@ namespace SnakeConsole
 
         private static readonly Random Random = new Random();
 
-        private static SqliteConnection connection = new SqliteConnection("Data Source=\"C:\\Users\\andre\\OneDrive\\Рабочий стол" +
-            "\\C#\\SnakeConsole\\SnakeDB\"");
+        private static SqliteConnection connection = new SqliteConnection("Data Source = \"C:\\Users\\zybik\\source\\repos\\SnakeGame3\\SnakeDB.sqlite3\"");
 
 
         static int Main()
         {
+            
             SetWindowSize(ScreenWidth, ScreenHeight);
             SetBufferSize(ScreenWidth, ScreenHeight);
             CursorVisible = false;
@@ -112,7 +113,11 @@ namespace SnakeConsole
                     food = GenFood(snake);
                     food.Draw();
 
-                    score++;
+                    if (FrameMilliseconds > 100)
+                    {
+                        FrameMilliseconds -= 10;
+                    }
+                        score++;
 
                     Task.Run(() => Beep(1200, 200));
                 }
