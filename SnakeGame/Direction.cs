@@ -1,4 +1,4 @@
-﻿namespace Zmeika2
+﻿namespace SnakeConsole
 {
     public enum Direction
     {

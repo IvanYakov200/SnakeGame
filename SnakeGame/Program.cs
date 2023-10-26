@@ -1,12 +1,12 @@
-﻿using SnakeGAme2;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static System.Console;
+using Microsoft.Data.Sqlite;
 
-namespace Zmeika2
+namespace SnakeConsole
 {
     class Program
     {
@@ -16,7 +16,7 @@ namespace Zmeika2
         private const int ScreenWidth = MapWidth * 3;
         private const int ScreenHeight = MapHeight * 3;
 
-        static int FrameMilliseconds = 200;
+        private const int FrameMilliseconds = 200;
 
         private const ConsoleColor BorderColor = ConsoleColor.Gray;
 
@@ -27,51 +27,57 @@ namespace Zmeika2
 
         private static readonly Random Random = new Random();
 
-        static List<Record> record = new List<Record>();
+        private static SqliteConnection connection = new SqliteConnection("Data Source=\"C:\\Users\\andre\\OneDrive\\Рабочий стол" +
+            "\\C#\\SnakeConsole\\SnakeDB\"");
 
-        static void Main()
+
+        static int Main()
         {
-            int i = 5;
             SetWindowSize(ScreenWidth, ScreenHeight);
             SetBufferSize(ScreenWidth, ScreenHeight);
             CursorVisible = false;
-            while (i != 0)
+
+            while (true)
             {
-                Console.Clear();
-                Console.WriteLine("---МЕНЮ---");
-                Console.WriteLine("1. Играть в змейку");
-                Console.WriteLine("2. Таблица рекордов");
-                Console.WriteLine("0. Выход");
-                i = Convert.ToInt32(Console.ReadLine());
-                switch (i)
+                switch (Menu())
                 {
                     case 1:
-                        while (true)
                         {
                             StartGame();
-                            Thread.Sleep(2000);
-                            ReadKey();
+                            Thread.Sleep(700);
                             Console.Clear();
                             break;
                         }
-                        break;
                     case 2:
-                        Console.Clear();
-                        for (int n = 0; n < record.Count(); n++)
                         {
-                            Console.WriteLine(record[n].Name + " " + record[n].points);
+                            var Leaders = DataBase.LeaderBoard(connection);
+                            if (Leaders.Count == 0)
+                            {
+                                Console.WriteLine("Таблица лидеров пуста!");
+                            }
+                            else
+                            for(int i = 0; i < Leaders.Count;i++)
+                            {
+                                Console.WriteLine(Leaders[i]);
+                            }
+                            break;
                         }
-                        Console.ReadKey();
-                        break;
+                    case 0: 
+                        {
+                            return 0;
+                            break;
+                        }
+                    default:
+                        {
+                            Console.WriteLine("Введите значение соответсвующее Меню!");
+                            break;
+                        }
                 }
             }
         }
 
         static void StartGame()
         {
-            Console.WriteLine("Введите Ваши имя: ");
-            string name;
-            name = Console.ReadLine();
             int score = 0;
 
             Clear();
@@ -107,7 +113,6 @@ namespace Zmeika2
                     food.Draw();
 
                     score++;
-                    FrameMilliseconds -= 10;
 
                     Task.Run(() => Beep(1200, 200));
                 }
@@ -126,14 +131,31 @@ namespace Zmeika2
                 lagMs = (int)sw.ElapsedMilliseconds;
             }
 
-            FrameMilliseconds = 200;
             snake.Clear();
             food.Clear();
 
             SetCursorPosition(ScreenWidth / 3, ScreenHeight / 2);
             WriteLine($"Game over, Score: {score}");
-            record.Add(new Record(name, score));
+
             Task.Run(() => Beep(200, 600));
+
+            Thread.Sleep(1000);
+
+            Clear();
+
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Введите ваш Nickname:");
+
+            string NickName = Console.ReadLine();
+            if(DataBase.AddUser(connection, NickName, score))
+            {
+                Console.WriteLine("Вы успешно добавлены в таблицу лидеров!");
+            }
+            else
+            {
+                Console.WriteLine("Упс! Что - то пошло не так!");
+            }
         }
 
         static void DrawBoard()
@@ -181,6 +203,31 @@ namespace Zmeika2
             };
 
             return currentDirection;
+        }
+
+        public static int Menu()
+        {
+            Console.WriteLine("------Меню------");
+            Console.WriteLine("1. Играть в змейку");
+            Console.WriteLine("2. Таблица рекордов");
+            Console.WriteLine("0. Выход");
+            Console.WriteLine("------------------------");
+            return GetValue();
+        }
+        public static int GetValue()
+        {
+            Console.WriteLine("Введите ваше число:");
+            string input = Console.ReadLine();
+            bool success = Int32.TryParse(input, out int result);
+            if (success)
+            {
+                return result;
+            }
+            else
+            {
+                Console.WriteLine("Некорректное значение");
+                return GetValue();
+            }
         }
     }
 }

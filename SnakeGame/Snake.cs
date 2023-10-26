@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Zmeika2
+namespace SnakeConsole
 {
     public class Snake
     {
         private readonly ConsoleColor _headColor;
 
         private readonly ConsoleColor _bodyColor;
+
+        public Pixel Head { get; private set; }
+
+        public Queue<Pixel> Body { get; } = new Queue<Pixel>();
 
         public Snake(int initialX, int initialY, ConsoleColor headColor, ConsoleColor bodyColor, int bodyLength = 3)
         {
@@ -23,10 +27,6 @@ namespace Zmeika2
 
             Draw();
         }
-
-        public Pixel Head { get; private set; }
-
-        public Queue<Pixel> Body { get; } = new Queue<Pixel>();
 
         public void Move(Direction direction, bool eat = false)
         {
